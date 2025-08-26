@@ -46,7 +46,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
               <Bot size={24} className="text-amber-600 md:w-8 md:h-8" />
             </div>
             <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-2 md:mb-3">
-              <span className="text-yc-brown">YC Mind</span>
+              <span className="text-yc-brown">YC Mine</span>
             </h2>
             <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
               Find Your Next Opportunity

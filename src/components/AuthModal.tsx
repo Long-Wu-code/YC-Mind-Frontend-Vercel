@@ -108,8 +108,8 @@ const AuthModal: React.FC<AuthModalProps> = ({
             {mode === 'reset' && 'Reset Password'}
           </h2>
           <p className="text-gray-600 mt-2">
-            {mode === 'signin' && 'Welcome back to YC Mind'}
-            {mode === 'signup' && 'Join YC Mind today'}
+            {mode === 'signin' && 'Welcome back to YC Mine'}
+            {mode === 'signup' && 'Join YC Mine today'}
             {mode === 'reset' && 'Enter your email to reset password'}
           </p>
         </div>

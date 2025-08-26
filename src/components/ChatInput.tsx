@@ -243,10 +243,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     onKeyPress={handleKeyPress}
                     placeholder={
                       savedLinkedinUrl 
-                        ? "Ask YC Mind about your LinkedIn profile..." 
+                        ? "Ask YC Mine about your LinkedIn profile..." 
                         : uploadedFile 
-                          ? "Ask YC Mind about your file..." 
-                          : "Ask YC Mind"
+                          ? "Ask YC Mine about your file..." 
+                          : "Ask YC Mine"
                     }
                     disabled={isLoading}
                     className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-gray-400 disabled:opacity-50"

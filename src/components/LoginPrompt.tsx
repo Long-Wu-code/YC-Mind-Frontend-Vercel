@@ -15,7 +15,7 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({ onLogin, onClose }) => {
         </div>
         
         <h3 className="text-2xl font-bold text-gray-800 mb-3">
-          Sign in to YC Mind
+          Sign in to YC Mine
         </h3>
         
         <p className="text-gray-600 mb-6">
