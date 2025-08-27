@@ -69,41 +69,43 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       )}
 
-      <div className={`fixed left-0 top-0 h-full bg-white/90 backdrop-blur-sm border-r border-gray-200/50 transition-all duration-300 z-20 ${
-        isExpanded ? 'w-80 md:w-80 w-full' : 'w-16'
+      <div className={`fixed left-0 top-0 h-full bg-white/90 backdrop-blur-sm border-r border-gray-200/50 z-20 transition-all duration-300 ease-in-out ${
+        isExpanded ? 'w-80' : 'w-16'
       }`}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200/50">
-            {isExpanded && (
-              <button 
-                onClick={onNewChat}
-                disabled={!isAuthenticated}
-                className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg transition-colors text-sm md:text-base ${
-                  isAuthenticated 
-                    ? 'bg-orange-50 hover:bg-orange-100 text-orange-600' 
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                }`}
+          <div className={`border-b border-gray-200/50 ${
+            isExpanded ? 'p-4' : 'p-2'
+          }`}>
+            <div className={`flex ${isExpanded ? 'justify-end' : 'justify-center'}`}>
+              <button
+                onClick={onToggle}
+                className="p-2 hover:bg-gray-100/50 rounded-lg transition-colors"
               >
-                <Plus size={16} />
-                <span className="font-medium">New Chat</span>
+                <Menu size={20} className="text-gray-600" />
               </button>
-            )}
-            <button
-              onClick={onToggle}
-              className="p-2 hover:bg-gray-100/50 rounded-lg transition-colors md:relative absolute right-4 top-4 z-30"
-            >
-              <Menu size={20} className="text-gray-600" />
-            </button>
+            </div>
           </div>
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto">
-            <div className="p-4 space-y-2">
-              <div className="flex items-center gap-3 p-3 hover:bg-gray-100/50 rounded-lg cursor-pointer transition-colors">
-                <MessageSquare size={20} className="text-gray-600 flex-shrink-0" />
-                {isExpanded && <span className="text-gray-700 font-medium">Chat History</span>}
-              </div>
+            <div className={`space-y-2 ${isExpanded ? 'p-4' : 'p-2'}`}>
+              <button 
+                onClick={onNewChat}
+                disabled={!isAuthenticated}
+                className={`flex items-center hover:bg-orange-100 rounded-lg transition-colors ${
+                  isExpanded 
+                    ? 'gap-3 p-3' 
+                    : 'justify-center p-2 mx-1'
+                } ${
+                  isAuthenticated 
+                    ? 'bg-orange-50 text-orange-600' 
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+              >
+                <Plus size={20} className="flex-shrink-0" />
+                {isExpanded && <span className="font-medium">New Chat</span>}
+              </button>
 
               {isExpanded && (
                 <div className="mt-6">
@@ -111,17 +113,16 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Recent Chats</h3>
                   </div>
                   <div className="space-y-1">
-                    {!isAuthenticated ? (
-                      <div className="p-3 text-center text-gray-500 text-sm">
-                        <p>Sign in to view your chat history</p>
-                      </div>
-                    ) : chatSessions.length === 0 ? (
-                      <div className="p-3 text-center text-gray-500 text-sm">
-                        <MessageSquare size={24} className="mx-auto mb-2 opacity-50" />
-                        <p>No chat history yet</p>
-                        <p className="text-xs mt-1">Start a conversation to see it here</p>
-                      </div>
-                    ) : (
+                      {!isAuthenticated ? (
+                        <div className="p-3 text-center text-gray-500 text-sm">
+                          <p>Sign in to view your chat history</p>
+                        </div>
+                      ) : chatSessions.length === 0 ? (
+                        <div className="p-3 text-center text-gray-500 text-sm">
+                          <p>No chat history yet</p>
+                          <p className="text-xs mt-1">Start a conversation to see it here</p>
+                        </div>
+                      ) : (
                       chatSessions.map((session) => (
                         <div
                           key={session.id}
@@ -161,13 +162,23 @@ const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           {/* Footer */}
-          <div className="p-4 space-y-2 border-t border-gray-200/50">
-            <div className="flex items-center gap-3 p-3 hover:bg-gray-100/50 rounded-lg cursor-pointer transition-colors">
+          <div className={`border-t border-gray-200/50 ${
+            isExpanded ? 'p-4 space-y-2' : 'py-2 px-1 space-y-1'
+          }`}>
+            <div className={`flex items-center hover:bg-gray-100/50 rounded-lg cursor-pointer transition-colors ${
+              isExpanded 
+                ? 'gap-3 p-3' 
+                : 'justify-center p-2 mx-1'
+            }`}>
               <Settings size={20} className="text-gray-600 flex-shrink-0" />
               {isExpanded && <span className="text-gray-700">Settings</span>}
             </div>
             
-            <div className="flex items-center gap-3 p-3 hover:bg-gray-100/50 rounded-lg cursor-pointer transition-colors">
+            <div className={`flex items-center hover:bg-gray-100/50 rounded-lg cursor-pointer transition-colors ${
+              isExpanded 
+                ? 'gap-3 p-3' 
+                : 'justify-center p-2 mx-1'
+            }`}>
               <HelpCircle size={20} className="text-gray-600 flex-shrink-0" />
               {isExpanded && <span className="text-gray-700">Help</span>}
             </div>

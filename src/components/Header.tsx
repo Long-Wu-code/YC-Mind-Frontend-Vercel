@@ -47,8 +47,8 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <div className={`fixed top-0 right-0 h-16 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 z-10 transition-all duration-300 ${
-      sidebarExpanded ? 'left-80 md:left-80 left-0' : 'left-16 md:left-16 left-0'
+    <div className={`fixed top-0 right-0 h-16 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 z-10 transition-all duration-300 ease-in-out content-transform ${
+      sidebarExpanded ? 'left-80' : 'left-16'
     }`}>
       <div className="flex items-center justify-between h-full px-4 md:px-6">
         {/* Empty space for layout */}

@@ -1,3 +1,138 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 硬件加速优化 - Gemini 风格的丝滑动画 */
+.sidebar-transform {
+  will-change: transform;
+  transform: translateZ(0); /* 启用硬件加速 */
+  backface-visibility: hidden; /* 避免闪烁 */
+}
+
+.content-transform {
+  will-change: left, right;
+  transform: translateZ(0); /* 启用硬件加速 */
+}
+
+/* Highlight.js 代码高亮样式 - GitHub 风格 */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.75rem;
+  background: #f6f8fa;
+  color: #24292e;
+  border-radius: 6px;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: #6a737d;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-subst {
+  color: #d73a49;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag .hljs-attr {
+  color: #005cc5;
+}
+
+.hljs-string,
+.hljs-doctag {
+  color: #032f62;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #6f42c1;
+  font-weight: bold;
+}
+
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-tag,
+.hljs-regexp,
+.hljs-link {
+  color: #22863a;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-built_in,
+.hljs-builtin-name {
+  color: #e36209;
+}
+
+.hljs-meta {
+  color: #005cc5;
+}
+
+.hljs-deletion {
+  background: #ffeef0;
+}
+
+.hljs-addition {
+  background: #f0fff4;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: bold;
+}
+
+/* Markdown 内容优化样式 */
+.markdown-content {
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-content > *:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 表格响应式处理 */
+.markdown-content table {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+  .markdown-content table {
+    font-size: 0.75rem;
+  }
+  
+  .markdown-content th,
+  .markdown-content td {
+    padding: 0.5rem !important;
+  }
+}
+
+/* 代码块滚动优化 */
+.markdown-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* 链接悬停效果增强 */
+.markdown-content a:hover {
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}

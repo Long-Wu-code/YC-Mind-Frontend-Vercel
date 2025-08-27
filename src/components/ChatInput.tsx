@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Send, Paperclip, Linkedin, Square } from 'lucide-react';
 
 interface ChatInputProps {
@@ -32,7 +32,26 @@ const ChatInput: React.FC<ChatInputProps> = ({
   const [showLinkedinInput, setShowLinkedinInput] = useState(false);
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [savedLinkedinUrl, setSavedLinkedinUrl] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // 自动调整 textarea 高度
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      const scrollHeight = textarea.scrollHeight;
+      const maxHeight = 120; // 最大高度 120px
+      const minHeight = 24; // 最小高度 24px
+      textarea.style.height = Math.min(Math.max(scrollHeight, minHeight), maxHeight) + 'px';
+    }
+  };
+
+  // 当消息内容改变时调整高度
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [message]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +67,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       } else {
         // 发送消息（可能包含文件）
         // 确保上传的文件信息被正确传递和处理
-        onSendMessage(message.trim());
+        onSendMessage(message);
         
         // 如果有上传的文件，立即清除本地文件状态
         // 这是为了确保UI立即响应，即使父组件的状态更新可能稍有延迟
@@ -63,6 +82,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
         }
       }
       setMessage('');
+      // 重置 textarea 高度
+      setTimeout(() => adjustTextareaHeight(), 0);
     }
   };
 
@@ -134,16 +155,30 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      if (e.shiftKey) {
+        // Shift + Enter: 允许换行，不发送消息
+        return;
+      } else {
+        // Enter: 发送消息
+        e.preventDefault();
+        handleSubmit(e);
+      }
+    }
+  };
+
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    // 限制最大字符数为 2000
+    if (value.length <= 2000) {
+      setMessage(value);
     }
   };
 
   return (
     <>
-      <div className={`fixed bottom-0 right-0 transition-all duration-300 ${
+      <div className={`fixed bottom-0 right-0 transition-all duration-300 ease-in-out content-transform ${
         sidebarExpanded ? 'left-80' : 'left-16'
       }`}>
         <div className="p-6">
@@ -232,28 +267,41 @@ const ChatInput: React.FC<ChatInputProps> = ({
             )}
 
             {/* Input Container */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
+            <div className={`bg-white rounded-2xl shadow-sm border transition-colors ${
+              isFocused ? 'border-orange-300 shadow-md' : 'border-gray-200'
+            }`}>
               {/* Input row */}
-              <div className="flex items-center gap-3 px-4 py-3">
+              <div className="flex items-start gap-3 px-4 py-3">
                 {/* Input Field */}
                 <div className="flex-1">
                   <textarea
+                    ref={textareaRef}
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onChange={handleMessageChange}
+                    onKeyDown={handleKeyDown}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
                     placeholder={
                       savedLinkedinUrl 
-                        ? "Ask YC Mine about your LinkedIn profile..." 
+                        ? "Ask YC Mine about your LinkedIn profile... (Enter 发送, Shift+Enter 换行)" 
                         : uploadedFile 
-                          ? "Ask YC Mine about your file..." 
-                          : "Ask YC Mine"
+                          ? "Ask YC Mine about your file... (Enter 发送, Shift+Enter 换行)" 
+                          : "Ask YC Mine (Enter 发送, Shift+Enter 换行)"
                     }
                     disabled={isLoading}
-                    className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-gray-400 disabled:opacity-50"
+                    className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-gray-400 disabled:opacity-50 overflow-hidden"
                     rows={1}
                     style={{ minHeight: '24px', maxHeight: '120px' }}
                   />
                 </div>
+                {/* 字符计数器 - 只在有内容时显示 */}
+                {message.length > 0 && (
+                  <div className="flex flex-col items-end justify-end pb-1">
+                    <div className={`text-xs ${message.length > 1000 ? 'text-red-500' : 'text-gray-400'}`}>
+                      {message.length}/2000
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Bottom row with Resume and LinkedIn buttons */}

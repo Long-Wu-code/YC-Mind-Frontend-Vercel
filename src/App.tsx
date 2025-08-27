@@ -242,7 +242,7 @@ function App() {
     }
     
     // Ensure we always have a non-empty query for Dify API
-    const query = userInput.trim() || (uploadedFile ? 'Analyze this resume' : '');
+    const query = userInput || (uploadedFile ? 'Analyze this resume' : '');
     
     if (!query) {
       console.log('查询内容为空，无法发送');
@@ -292,13 +292,13 @@ function App() {
     if (userInput.trim()) {
       const textMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: userInput.trim(),
+        content: userInput,
         sender: 'user',
         timestamp: new Date(),
         type: 'text'
       };
       messagesToAdd.push(textMessage);
-      combinedQuery += userInput.trim();
+      combinedQuery += userInput;
     } else if (uploadedFile) {
       // 如果只有文件没有文本输入，添加默认提示
       combinedQuery += 'Please analyze my resume and provide feedback.';
@@ -466,7 +466,7 @@ function App() {
   };
 
   // Upload LinkedIn profile
-  const handleUploadLinkedin = async (url: string, userMessage: string) => {
+  const handleUploadLinkedin = async (url: string, userMessage?: string) => {
     if (!user) {
       console.log('User not authenticated, cannot upload LinkedIn');
       return;
@@ -492,7 +492,7 @@ function App() {
     // 创建包含LinkedIn URL的用户消息
     const linkedinMessage: Message = {
       id: Date.now().toString(),
-      content: userMessage,
+      content: userMessage || 'Analyze this LinkedIn profile',
       sender: 'user',
       timestamp: new Date(),
       type: 'linkedin',
@@ -504,7 +504,7 @@ function App() {
 
     try {
       // 发送LinkedIn分析请求，包含URL信息
-      const analysisPrompt = `${userMessage}\n\nLinkedIn Profile URL: ${url}`;
+      const analysisPrompt = `${userMessage || 'Analyze this LinkedIn profile'}\n\nLinkedIn Profile URL: ${url}`;
       
       const currentSession = chatSessions.find(s => s.id === sessionId);
       const conversationId = currentSession?.conversationId;

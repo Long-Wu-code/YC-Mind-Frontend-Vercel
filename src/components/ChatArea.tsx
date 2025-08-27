@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { Bot, User, Linkedin, ExternalLink } from 'lucide-react';
 import { Message } from '../types';
+import MarkdownRenderer from './MarkdownRenderer';
 
 interface ChatAreaProps {
   messages: Message[];
@@ -37,8 +38,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
 
   if (messages.length === 0) {
     return (
-      <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ${
-        sidebarExpanded ? 'left-80 md:left-80 left-0' : 'left-16 md:left-16 left-0'
+      <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
+        sidebarExpanded ? 'left-80' : 'left-16'
       }`}>
         <div className="h-full flex flex-col items-center justify-center px-4 md:px-6">
           <div className="text-center max-w-md">
@@ -58,8 +59,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
   }
 
   return (
-    <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ${
-      sidebarExpanded ? 'left-80 md:left-80 left-0' : 'left-16 md:left-16 left-0'
+    <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
+      sidebarExpanded ? 'left-80' : 'left-16'
     }`}>
       <div className="h-full overflow-y-auto px-6 py-6">
         <div className="max-w-4xl mx-auto space-y-3 md:space-y-6">
@@ -102,7 +103,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
                       <div className="flex-1">
                         <div className="font-medium mb-1 md:mb-2 text-xs md:text-sm">LinkedIn Profile Analysis</div>
                         <div className="text-xs opacity-75 mb-1 md:mb-2 break-all">Profile: {message.linkedinUrl}</div>
-                        <div className="whitespace-pre-wrap">{message.content}</div>
+                        <MarkdownRenderer content={message.content} />
                       </div>
                       <a
                         href={message.linkedinUrl}
@@ -115,7 +116,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
                       </a>
                     </div>
                   ) : (
-                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    <MarkdownRenderer content={message.content} />
                   )}
                   
                   {/* 流式输入指示器 - 只在当前正在流式输出的消息上显示 */}
