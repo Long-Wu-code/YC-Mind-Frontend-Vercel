@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import rehypeHighlight from 'rehype-highlight';
+import rehypeRaw from 'rehype-raw';
 
 interface MarkdownRendererProps {
   content: string;
@@ -14,7 +15,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
     <div className={`markdown-content ${className}`}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
-        rehypePlugins={[rehypeHighlight]}
+        rehypePlugins={[rehypeRaw, rehypeHighlight]}
         components={{
           // 换行处理
           br: () => <br className="leading-normal" />,
@@ -132,10 +133,15 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
               {children}
             </td>
           ),
-          // 分隔线样式
-          hr: () => (
-            <hr className="my-6 border-t border-gray-300" />
-          ),
+          // 分隔线样式 - 支持自定义样式
+          hr: ({ style, ...props }) => {
+            // 如果有自定义样式，保留原始样式
+            if (style) {
+              return <hr style={style} className="my-6" {...props} />;
+            }
+            // 默认样式
+            return <hr className="my-6 border-t border-gray-300" />;
+          },
           // 强调样式
           strong: ({ children }) => (
             <strong className="font-semibold text-gray-900">
