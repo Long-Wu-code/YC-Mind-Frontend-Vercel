@@ -16,14 +16,16 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
         remarkPlugins={[remarkGfm, remarkBreaks]}
         rehypePlugins={[rehypeHighlight]}
         components={{
+          // 换行处理
+          br: () => <br className="leading-normal" />,
           // 自定义标题样式
           h1: ({ children }) => (
-            <h1 className="text-2xl font-bold mb-4 text-gray-900 border-b border-gray-200 pb-2">
+            <h1 className="text-2xl font-bold mb-4 text-gray-900">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-xl font-semibold mb-3 text-gray-800 border-b border-gray-100 pb-1">
+            <h2 className="text-xl font-semibold mb-3 text-gray-800">
               {children}
             </h2>
           ),
