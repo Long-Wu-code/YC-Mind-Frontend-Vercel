@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Bot, User, Linkedin, ExternalLink } from 'lucide-react';
 import { Message } from '../types';
 import MarkdownRenderer from './MarkdownRenderer';
+import { getWelcomeMessage, formatWelcomeMessage } from '../config/messages';
 
 interface ChatAreaProps {
   messages: Message[];
@@ -36,34 +37,76 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
     }).format(date);
   };
 
+  const welcomeMessage = formatWelcomeMessage(getWelcomeMessage());
+
   if (messages.length === 0) {
+    // 空会话状态 - 显示完整的欢迎界面
     return (
       <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
         sidebarExpanded ? 'left-80' : 'left-16'
       }`}>
-        <div className="h-full flex flex-col items-center justify-center px-4 md:px-6">
-          <div className="text-center max-w-md">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
-              <Bot size={24} className="text-amber-600 md:w-8 md:h-8" />
+        <div className="h-full overflow-y-auto px-6 py-6">
+          <div className="max-w-4xl mx-auto">
+            {/* 标题区域 */}
+            <div className="text-center mb-8">
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+                <Bot size={24} className="text-amber-600 md:w-8 md:h-8" />
+              </div>
+              <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-2 md:mb-3">
+                <span className="text-yc-brown">YC Mine</span>
+              </h2>
+              <p className="text-sm md:text-base text-gray-600">
+                Find Your Next Opportunity
+              </p>
             </div>
-            <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-2 md:mb-3">
-              <span className="text-yc-brown">YC Mine</span>
-            </h2>
-            <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
-              Find Your Next Opportunity
-            </p>
+            
+            {/* AI 欢迎消息 */}
+            <div className="flex gap-2 md:gap-4 justify-start max-w-3xl">
+              <div className="w-7 h-7 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Bot size={14} className="text-white md:w-4 md:h-4" />
+              </div>
+              
+              <div className="max-w-xs md:max-w-2xl">
+                <div className="rounded-2xl px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-white border border-gray-200 shadow-sm">
+                  <MarkdownRenderer content={welcomeMessage} />
+                </div>
+                
+                <div className="text-xs text-gray-500 mt-1 text-left">
+                  Welcome
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
+  // 有消息的会话状态 - 显示消息列表，欢迎消息作为第一条消息
   return (
     <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
       sidebarExpanded ? 'left-80' : 'left-16'
     }`}>
       <div className="h-full overflow-y-auto px-6 py-6">
         <div className="max-w-4xl mx-auto space-y-3 md:space-y-6">
+          {/* AI 欢迎消息 - 作为对话的第一条消息，但不保存到会话中 */}
+          <div className="flex gap-2 md:gap-4 justify-start">
+            <div className="w-7 h-7 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <Bot size={14} className="text-white md:w-4 md:h-4" />
+            </div>
+            
+            <div className="max-w-xs md:max-w-2xl">
+              <div className="rounded-2xl px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-white border border-gray-200 shadow-sm">
+                <MarkdownRenderer content={welcomeMessage} />
+              </div>
+              
+              <div className="text-xs text-gray-500 mt-1 text-left">
+                Welcome
+              </div>
+            </div>
+          </div>
+
+          {/* 实际会话消息列表 */}
           {messages.map((message) => (
             <div
               key={message.id}

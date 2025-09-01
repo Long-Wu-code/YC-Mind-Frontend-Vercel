@@ -98,7 +98,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
       const allowedTypes = ['.pdf'];
       const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
       if (!allowedTypes.includes(fileExtension)) {
-        alert('请上传PDF格式的简历文件');
+        alert('Please upload a PDF format resume file');
         // Reset file input
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
@@ -110,8 +110,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
         // 上传简历到 Dify
         await onUploadFile(file);
       } catch (error) {
-        console.error('简历上传失败:', error);
-        alert('简历上传失败，请重试');
+        console.error('Resume upload failed:', error);
+        alert('Resume upload failed, please try again');
         // Reset file input on error
         if (fileInputRef.current) {
           fileInputRef.current.value = '';
@@ -133,7 +133,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
     // 验证是否为LinkedIn URL
     const trimmedUrl = linkedinUrl.trim();
     if (!trimmedUrl.includes('linkedin.com')) {
-      alert('请输入有效的LinkedIn个人资料链接');
+      alert('Please enter a valid LinkedIn profile link');
       return;
     }
     
@@ -283,10 +283,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     onBlur={() => setIsFocused(false)}
                     placeholder={
                       savedLinkedinUrl 
-                        ? "Ask YC Mine about your LinkedIn profile... (Enter 发送, Shift+Enter 换行)" 
+                        ? "Ask YC Mine about your LinkedIn profile... (Enter to send, Shift+Enter for new line)" 
                         : uploadedFile 
-                          ? "Ask YC Mine about your file... (Enter 发送, Shift+Enter 换行)" 
-                          : "Ask YC Mine (Enter 发送, Shift+Enter 换行)"
+                          ? "Ask YC Mine about your file... (Enter to send, Shift+Enter for new line)" 
+                          : "Ask YC Mine (Enter to send, Shift+Enter for new line)"
                     }
                     disabled={isLoading}
                     className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-gray-400 disabled:opacity-50 overflow-hidden"

@@ -43,7 +43,7 @@ const LoginPrompt: React.FC<LoginPromptProps> = ({ onLogin, onClose }) => {
             className="w-full flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white py-3 px-4 rounded-lg font-medium transition-colors"
           >
             <Mail size={16} />
-            邮箱登录/注册
+            Sign In / Sign Up
           </button>
 
           <button

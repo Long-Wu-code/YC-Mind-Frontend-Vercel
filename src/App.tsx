@@ -1,16 +1,22 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import ChatArea from './components/ChatArea';
 import ChatInput from './components/ChatInput';
 import LoginPrompt from './components/LoginPrompt';
 import AuthModal from './components/AuthModal';
-import { User, Message, ChatSession } from './types';
+import { Message, ChatSession } from './types';
 import { useDify } from './hooks/useDify';
 import { useAuth } from './hooks/useAuth';
-import DifyApiService from './services/difyApi';
-import { difyConfig, validateDifyConfig, getConfigDebugInfo } from './config/dify';
+import { validateDifyConfig, getConfigDebugInfo } from './config/dify';
 import { validateSupabaseConfig, supabase } from './config/supabase';
+
+// 生成唯一ID的函数
+let idCounter = 0;
+const generateUniqueId = () => {
+  return `${Date.now()}-${++idCounter}`;
+};
 
 function App() {
   // Sidebar state
@@ -76,7 +82,7 @@ function App() {
       setIsStreaming(true);
       
       // 创建流式消息
-      const streamingId = 'streaming-' + Date.now();
+      const streamingId = 'streaming-' + generateUniqueId();
       console.log('Creating streaming message with ID:', streamingId);
       setStreamingMessageId(streamingId);
       streamingMessageIdRef.current = streamingId;
@@ -106,7 +112,7 @@ function App() {
             if (msg.id === streamingMessageIdRef.current) {
               const finalMessage: Message = {
                 ...msg,
-                id: Date.now().toString(),
+                id: generateUniqueId(),
                 timestamp: new Date()
               };
               
@@ -213,14 +219,7 @@ function App() {
     }
   };
 
-  // Handle guest login (fallback)
-  const handleGuestLogin = () => {
-    setChatSessions([]);
-    setMessages([]);
-    setCurrentSessionId(null);
-    setShowLoginPrompt(false);
-    setShowAuthModal(false);
-  };
+
 
   // Send message
   const handleSendMessage = async (userInput: string) => {
@@ -255,7 +254,7 @@ function App() {
     let sessionId = currentSessionId;
     if (!sessionId) {
       const newSession: ChatSession = {
-        id: Date.now().toString(),
+        id: generateUniqueId(),
         title: 'New Chat',
         lastMessage: 'Starting conversation...',
         timestamp: new Date(),
@@ -276,7 +275,7 @@ function App() {
     // 如果有文件，先创建文件消息
     if (uploadedFile) {
       const fileMessage: Message = {
-        id: Date.now().toString(),
+        id: generateUniqueId(),
         content: 'Please analyze this resume',
         sender: 'user',
         timestamp: new Date(),
@@ -291,7 +290,7 @@ function App() {
     // 如果有文本输入，创建文本消息
     if (userInput.trim()) {
       const textMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: generateUniqueId(),
         content: userInput,
         sender: 'user',
         timestamp: new Date(),
@@ -373,7 +372,7 @@ function App() {
       // 特殊处理API密钥错误
       if (error instanceof Error && (error.message.includes('403') || error.message.includes('API Key 验证失败'))) {
         const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: generateUniqueId(),
           content: '❌ API 配置错误：请检查 .env 文件中的 VITE_DIFY_API_KEY 是否正确。\n\n请确保：\n1. API Key 以 "app-" 开头\n2. API Key 来自已发布的 Dify 应用\n3. 应用已启用 API 访问权限\n4. 网络连接正常',
           sender: 'ai',
           timestamp: new Date(),
@@ -387,7 +386,7 @@ function App() {
       
       // 显示错误消息
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: generateUniqueId(),
         content: uploadedFile ? '抱歉，文件分析失败。请检查文件格式并重试。' : '抱歉，我现在无法回复您的消息。请稍后再试。',
         sender: 'ai',
         timestamp: new Date(),
@@ -476,7 +475,7 @@ function App() {
     let sessionId = currentSessionId;
     if (!sessionId) {
       const newSession: ChatSession = {
-        id: Date.now().toString(),
+        id: generateUniqueId(),
         title: 'New Chat',
         lastMessage: 'Starting conversation...',
         timestamp: new Date(),
@@ -491,7 +490,7 @@ function App() {
 
     // 创建包含LinkedIn URL的用户消息
     const linkedinMessage: Message = {
-      id: Date.now().toString(),
+      id: generateUniqueId(),
       content: userMessage || 'Analyze this LinkedIn profile',
       sender: 'user',
       timestamp: new Date(),
@@ -521,8 +520,8 @@ function App() {
         ));
       }
       
-      const lastMessage = userMessage;
-      updateChatSession(sessionId, [linkedinMessage], userMessage);
+      const lastMessage = userMessage || 'Analyze this LinkedIn profile';
+      updateChatSession(sessionId, [linkedinMessage], lastMessage);
     } catch (error) {
       // 如果是用户主动中断，不显示错误消息
       if (error instanceof Error && error.name === 'AbortError') {
@@ -532,7 +531,7 @@ function App() {
       console.error('LinkedIn分析失败:', error);
       
       const errorMessage: Message = {
-        id: (Date.now() + 2).toString(),
+        id: generateUniqueId(),
         content: '抱歉，LinkedIn档案分析失败。请检查链接是否有效并重试。',
         sender: 'ai',
         timestamp: new Date(),
@@ -576,18 +575,24 @@ function App() {
   const handleNewChat = () => {
     if (!user) return;
     
-    // 如果当前对话界面没有任何内容，不创建新会话
-    if (messages.length === 0) {
-      return;
-    }
+    console.log('=== handleNewChat called ===');
+    console.log('Current messages before:', messages.length);
+    console.log('Current session before:', currentSessionId);
     
-    // 如果当前有会话，先保存当前会话状态
-    if (currentSessionId) {
+    // 先中断任何正在进行的请求
+    abortRequest();
+    
+    // 保存当前消息的引用（在清空之前）
+    const currentMessages = [...messages];
+    
+    // 如果当前有会话且有消息，先保存当前会话状态
+    if (currentSessionId && currentMessages.length > 0) {
+      console.log('Saving current session with', currentMessages.length, 'messages');
       setChatSessions(prev => prev.map(session => {
         if (session.id === currentSessionId) {
           return {
             ...session,
-            messages: [...messages]
+            messages: currentMessages
           };
         }
         return session;
@@ -596,7 +601,7 @@ function App() {
     
     // 创建新的空会话
     const newSession: ChatSession = {
-      id: Date.now().toString(),
+      id: generateUniqueId(),
       title: 'New Chat',
       lastMessage: 'Starting conversation...',
       timestamp: new Date(),
@@ -604,21 +609,44 @@ function App() {
       conversationId: undefined
     };
     
-    // 创建新会话
-    setChatSessions(prev => [newSession, ...prev]);
-    setCurrentSessionId(newSession.id);
-    setMessages([]);
+    console.log('Creating new session:', newSession.id);
+    
+    // 使用flushSync确保状态更新顺序
+    flushSync(() => {
+      // 先清空所有状态
+      setMessages([]);
+      setUploadedFile(null);
+      setIsStreaming(false);
+      setStreamingMessageId(null);
+    });
+    
+    flushSync(() => {
+      // 然后设置新会话
+      setChatSessions(prev => [newSession, ...prev]);
+      setCurrentSessionId(newSession.id);
+    });
+    
+    console.log('New chat created, messages cleared');
   };
 
   // Select chat session
   const handleSessionSelect = (id: string) => {
+    console.log('=== handleSessionSelect called ===');
+    console.log('Selecting session ID:', id);
+    console.log('Current session ID:', currentSessionId);
+    console.log('Current messages count:', messages.length);
+    
+    // 保存当前消息的引用（避免状态更新时序问题）
+    const currentMessages = [...messages];
+    
     // 如果当前有会话且有消息，先保存当前会话状态
-    if (currentSessionId && messages.length > 0) {
+    if (currentSessionId && currentMessages.length > 0) {
+      console.log('Saving current session messages before switch');
       setChatSessions(prev => prev.map(session => {
         if (session.id === currentSessionId) {
           return {
             ...session,
-            messages: [...messages]
+            messages: currentMessages
           };
         }
         return session;
@@ -628,17 +656,50 @@ function App() {
     // 切换到选中的会话
     const session = chatSessions.find(s => s.id === id);
     if (session) {
+      console.log('Found session with', session.messages?.length || 0, 'messages');
       setCurrentSessionId(id);
       setMessages([...(session.messages || [])]);
+      console.log('Session switched, messages loaded:', session.messages?.length || 0);
+    } else {
+      console.log('Session not found:', id);
     }
   };
 
   // Delete chat session
   const handleDeleteSession = (id: string) => {
-    setChatSessions(prev => prev.filter(session => session.id !== id));
+    console.log('=== handleDeleteSession called ===');
+    console.log('Deleting session:', id);
+    console.log('Current session:', currentSessionId);
+    console.log('Total sessions before delete:', chatSessions.length);
+    
+    // 计算删除后剩余的会话
+    const remainingSessions = chatSessions.filter(session => session.id !== id);
+    console.log('Remaining sessions after delete:', remainingSessions.length);
+    
+    // 更新会话列表
+    setChatSessions(remainingSessions);
+    
+    // 如果删除的是当前会话
     if (currentSessionId === id) {
-      setMessages([]);
-      setCurrentSessionId(null);
+      console.log('Deleted current session');
+      
+      // 如果还有其他会话，切换到第一个
+      if (remainingSessions.length > 0) {
+        console.log('Switching to first remaining session:', remainingSessions[0].id);
+        const firstSession = remainingSessions[0];
+        setCurrentSessionId(firstSession.id);
+        setMessages([...(firstSession.messages || [])]);
+      } else {
+        console.log('No remaining sessions, clearing all state to show welcome screen');
+        // 如果没有会话了，清空所有状态，显示欢迎界面
+        setCurrentSessionId(null);
+        setMessages([]);
+        setUploadedFile(null);
+        setIsStreaming(false);
+        setStreamingMessageId(null);
+        // 中断任何正在进行的请求
+        abortRequest();
+      }
     }
   };
 
