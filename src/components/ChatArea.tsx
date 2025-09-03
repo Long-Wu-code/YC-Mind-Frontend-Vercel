@@ -42,17 +42,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
   if (messages.length === 0) {
     // 空会话状态 - 显示完整的欢迎界面
     return (
-      <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
-        sidebarExpanded ? 'left-80' : 'left-16'
+      <div className={`fixed top-14 md:top-16 bottom-28 md:bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
+        sidebarExpanded ? 'left-0 md:left-80' : 'left-0 md:left-16'
       }`}>
-        <div className="h-full overflow-y-auto px-6 py-6">
+        <div className="h-full overflow-y-auto px-4 md:px-6 py-4 md:py-6">
           <div className="max-w-4xl mx-auto">
             {/* 标题区域 */}
-            <div className="text-center mb-8">
-              <div className="w-12 h-12 md:w-16 md:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
-                <Bot size={24} className="text-amber-600 md:w-8 md:h-8" />
+            <div className="text-center mb-6 md:mb-8">
+              <div className="w-10 h-10 md:w-16 md:h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-6">
+                <Bot size={20} className="text-amber-600 md:w-8 md:h-8" />
               </div>
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-2 md:mb-3">
+              <h2 className="text-lg md:text-2xl font-semibold text-gray-800 mb-2 md:mb-3">
                 <span className="text-yc-brown">YC Mine</span>
               </h2>
               <p className="text-sm md:text-base text-gray-600">
@@ -62,12 +62,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
             
             {/* AI 欢迎消息 */}
             <div className="flex gap-2 md:gap-4 justify-start max-w-3xl">
-              <div className="w-7 h-7 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <Bot size={14} className="text-white md:w-4 md:h-4" />
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Bot size={12} className="text-white md:w-4 md:h-4" />
               </div>
               
               <div className="max-w-xs md:max-w-2xl">
-                <div className="rounded-2xl px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-white border border-gray-200 shadow-sm">
+                <div className="rounded-2xl px-3 md:px-4 py-2 md:py-3 text-xs md:text-base bg-white border border-gray-200 shadow-sm">
                   <MarkdownRenderer content={welcomeMessage} />
                 </div>
                 
@@ -84,19 +84,19 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
 
   // 有消息的会话状态 - 显示消息列表，欢迎消息作为第一条消息
   return (
-    <div className={`fixed top-16 bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
-      sidebarExpanded ? 'left-80' : 'left-16'
+    <div className={`fixed top-14 md:top-16 bottom-28 md:bottom-32 right-0 transition-all duration-300 ease-in-out content-transform ${
+      sidebarExpanded ? 'left-0 md:left-80' : 'left-0 md:left-16'
     }`}>
-      <div className="h-full overflow-y-auto px-6 py-6">
+      <div className="h-full overflow-y-auto px-4 md:px-6 py-4 md:py-6">
         <div className="max-w-4xl mx-auto space-y-3 md:space-y-6">
           {/* AI 欢迎消息 - 作为对话的第一条消息，但不保存到会话中 */}
           <div className="flex gap-2 md:gap-4 justify-start">
-            <div className="w-7 h-7 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <Bot size={14} className="text-white md:w-4 md:h-4" />
+            <div className="w-6 h-6 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+              <Bot size={12} className="text-white md:w-4 md:h-4" />
             </div>
             
             <div className="max-w-xs md:max-w-2xl">
-              <div className="rounded-2xl px-3 md:px-4 py-2 md:py-3 text-sm md:text-base bg-white border border-gray-200 shadow-sm">
+              <div className="rounded-2xl px-3 md:px-4 py-2 md:py-3 text-xs md:text-base bg-white border border-gray-200 shadow-sm">
                 <MarkdownRenderer content={welcomeMessage} />
               </div>
               
@@ -113,14 +113,14 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
               className={`flex gap-2 md:gap-4 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {message.sender === 'ai' && (
-                <div className="w-7 h-7 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Bot size={14} className="text-white md:w-4 md:h-4" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Bot size={12} className="text-white md:w-4 md:h-4" />
                 </div>
               )}
               
               <div className={`max-w-xs md:max-w-2xl ${message.sender === 'user' ? 'order-first' : ''}`}>
                 <div
-                  className={`rounded-2xl px-3 md:px-4 py-2 md:py-3 text-sm md:text-base ${
+                  className={`rounded-2xl px-3 md:px-4 py-2 md:py-3 text-xs md:text-base ${
                     message.sender === 'user'
                       ? 'bg-orange-600 text-white ml-auto'
                       : 'bg-white border border-gray-200 shadow-sm'
@@ -128,24 +128,24 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
                 >
                   {message.type === 'file' ? (
                     <div className="flex items-center gap-2 md:gap-3">
-                      <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
-                        <svg width="12" height="12" className="md:w-4 md:h-4" fill="currentColor" viewBox="0 0 16 16">
+                      <div className="w-5 h-5 md:w-8 md:h-8 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
+                        <svg width="10" height="10" className="md:w-4 md:h-4" fill="currentColor" viewBox="0 0 16 16">
                           <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
                         </svg>
                       </div>
                       <div>
-                        <div className="font-medium text-xs md:text-sm truncate max-w-32 md:max-w-none">{message.fileName}</div>
-                        <div className="text-xs opacity-75">Resume: {message.content}</div>
+                        <div className="font-medium text-xs md:text-sm truncate max-w-24 md:max-w-none">{message.fileName}</div>
+                        <div className="text-xs opacity-75 hidden md:block">Resume: {message.content}</div>
                       </div>
                     </div>
                   ) : message.type === 'linkedin' ? (
                     <div className="flex items-start gap-2 md:gap-3">
-                      <div className="w-6 h-6 md:w-8 md:h-8 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
-                        <Linkedin size={12} className="text-blue-600 md:w-4 md:h-4" />
+                      <div className="w-5 h-5 md:w-8 md:h-8 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
+                        <Linkedin size={10} className="text-blue-600 md:w-4 md:h-4" />
                       </div>
                       <div className="flex-1">
                         <div className="font-medium mb-1 md:mb-2 text-xs md:text-sm">LinkedIn Profile Analysis</div>
-                        <div className="text-xs opacity-75 mb-1 md:mb-2 break-all">Profile: {message.linkedinUrl}</div>
+                        <div className="text-xs opacity-75 mb-1 md:mb-2 break-all hidden md:block">Profile: {message.linkedinUrl}</div>
                         <MarkdownRenderer content={message.content} />
                       </div>
                       <a
@@ -155,7 +155,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
                         className="p-1 hover:bg-gray-100 rounded transition-colors flex-shrink-0"
                         title="Open LinkedIn profile"
                       >
-                        <ExternalLink size={12} className="opacity-60 md:w-3.5 md:h-3.5" />
+                        <ExternalLink size={10} className="opacity-60 md:w-3.5 md:h-3.5" />
                       </a>
                     </div>
                   ) : (
@@ -165,9 +165,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
                   {/* 流式输入指示器 - 只在当前正在流式输出的消息上显示 */}
                   {message.id === streamingMessageId && isStreaming && (
                     <div className="flex items-center gap-1 mt-1 md:mt-2 opacity-70">
-                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce"></div>
-                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                      <div className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-orange-500 rounded-full animate-bounce"></div>
+                      <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     </div>
                   )}
                 </div>
@@ -183,8 +183,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, sidebarExpanded, isAuthen
               </div>
 
               {message.sender === 'user' && (
-                <div className="w-7 h-7 md:w-8 md:h-8 bg-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <User size={14} className="text-white md:w-4 md:h-4" />
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-gray-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User size={12} className="text-white md:w-4 md:h-4" />
                 </div>
               )}
             </div>

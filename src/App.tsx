@@ -734,7 +734,7 @@ function App() {
   }, [isStreaming]);
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 safe-area-inset-top safe-area-inset-bottom">
       {/* Sidebar */}
       <Sidebar
         isExpanded={sidebarExpanded}

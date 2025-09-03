@@ -136,3 +136,135 @@
   text-decoration: underline;
   transition: color 0.2s ease;
 }
+
+/* 移动端优化样式 */
+@media (max-width: 768px) {
+  /* 移动端滚动优化 */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* 移动端触摸优化 */
+  button, input, textarea, select {
+    touch-action: manipulation;
+  }
+  
+  /* 移动端字体大小优化 */
+  .text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  
+  /* 移动端间距优化 */
+  .space-y-3 > * + * {
+    margin-top: 0.5rem;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* 移动端圆角优化 */
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+  
+  /* 移动端阴影优化 */
+  .shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+  
+  .shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* 移动端输入框优化 */
+  textarea {
+    font-size: 16px; /* 防止iOS缩放 */
+  }
+  
+  /* 移动端按钮优化 */
+  button {
+    min-height: 44px; /* iOS推荐的最小触摸目标 */
+    min-width: 44px;
+  }
+  
+  /* 移动端模态框优化 */
+  .fixed.inset-0 {
+    backdrop-filter: blur(4px);
+  }
+  
+  /* 移动端文本选择优化 */
+  .select-none {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* 移动端滚动条隐藏 */
+  .overflow-y-auto::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+  
+  /* 移动端安全区域适配 */
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-inset-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-area-inset-right {
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* 超小屏幕优化 (小于475px) */
+@media (max-width: 474px) {
+  /* 进一步缩小字体和间距 */
+  .text-sm {
+    font-size: 0.75rem;
+  }
+  
+  .text-base {
+    font-size: 0.875rem;
+  }
+  
+  /* 超小屏幕的按钮优化 */
+  button {
+    min-height: 40px;
+    min-width: 40px;
+  }
+  
+  /* 超小屏幕的输入框优化 */
+  input, textarea {
+    font-size: 14px;
+  }
+}
+
+/* 横屏模式优化 */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* 横屏时减少垂直间距 */
+  .py-4 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .py-6 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  /* 横屏时优化头部高度 */
+  .h-14 {
+    height: 3rem;
+  }
+}

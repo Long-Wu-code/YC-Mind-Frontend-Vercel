@@ -179,21 +179,21 @@ const ChatInput: React.FC<ChatInputProps> = ({
   return (
     <>
       <div className={`fixed bottom-0 right-0 transition-all duration-300 ease-in-out content-transform ${
-        sidebarExpanded ? 'left-80' : 'left-16'
+        sidebarExpanded ? 'left-0 md:left-80' : 'left-0 md:left-16'
       }`}>
-        <div className="p-6">
+        <div className="p-3 md:p-6">
           <div className="max-w-4xl mx-auto">
             {/* Uploaded File Display */}
             {uploadedFile && (
-              <div className="mb-3 bg-gray-50 rounded-lg border border-gray-200 p-3">
+              <div className="mb-2 md:mb-3 bg-gray-50 rounded-lg border border-gray-200 p-2 md:p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
-                      <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                    <div className="w-3 h-3 md:w-4 md:h-4 bg-gray-100 rounded flex items-center justify-center flex-shrink-0">
+                      <svg width="10" height="10" className="md:w-3 md:h-3" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
                       </svg>
                     </div>
-                    <span className="text-sm text-gray-900 font-medium">Resume</span>
+                    <span className="text-xs md:text-sm text-gray-900 font-medium">Resume</span>
                   </div>
                   <button
                     onClick={onRemoveFile}
@@ -210,11 +210,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
             {/* Saved LinkedIn URL Display */}
             {savedLinkedinUrl && (
-              <div className="mb-3 bg-blue-50 rounded-lg border border-blue-200 p-3">
+              <div className="mb-2 md:mb-3 bg-blue-50 rounded-lg border border-blue-200 p-2 md:p-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Linkedin className="w-4 h-4 text-blue-600" />
-                    <span className="text-sm text-blue-900 font-medium">LinkedIn Profile</span>
+                    <Linkedin className="w-3 h-3 md:w-4 md:h-4 text-blue-600" />
+                    <span className="text-xs md:text-sm text-blue-900 font-medium">LinkedIn Profile</span>
                   </div>
                   <button
                     onClick={handleRemoveLinkedin}
@@ -231,10 +231,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
             {/* LinkedIn Input */}
             {showLinkedinInput && (
-              <div className="mb-4 bg-blue-50 rounded-xl border border-blue-200 p-3 max-w-md">
-                <div className="flex items-center gap-2 mb-3">
-                  <Linkedin className="w-5 h-5 text-blue-600" />
-                  <h3 className="font-medium text-blue-900">Add LinkedIn Profile</h3>
+              <div className="mb-3 md:mb-4 bg-blue-50 rounded-xl border border-blue-200 p-2 md:p-3 max-w-md">
+                <div className="flex items-center gap-2 mb-2 md:mb-3">
+                  <Linkedin className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                  <h3 className="font-medium text-blue-900 text-sm md:text-base">Add LinkedIn Profile</h3>
                 </div>
                 
                 <div className="space-y-2">
@@ -243,21 +243,21 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     value={linkedinUrl}
                     onChange={(e) => setLinkedinUrl(e.target.value)}
                     placeholder="https://linkedin.com/in/your-profile"
-                    className="w-full px-3 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm"
+                    className="w-full px-2 md:px-3 py-1.5 md:py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-xs md:text-sm"
                     autoFocus
                   />
                   
                   <div className="flex gap-2 justify-end">
                     <button
                       onClick={handleLinkedinCancel}
-                      className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                      className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm text-gray-600 hover:text-gray-800 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleLinkedinAdd}
                       disabled={!linkedinUrl.trim()}
-                      className="px-3 py-1.5 text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg transition-colors"
+                      className="px-2 md:px-3 py-1 md:py-1.5 text-xs md:text-sm bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white rounded-lg transition-colors"
                     >
                       Add
                     </button>
@@ -271,7 +271,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               isFocused ? 'border-orange-300 shadow-md' : 'border-gray-200'
             }`}>
               {/* Input row */}
-              <div className="flex items-start gap-3 px-4 py-3">
+              <div className="flex items-start gap-2 md:gap-3 px-3 md:px-4 py-2 md:py-3">
                 {/* Input Field */}
                 <div className="flex-1">
                   <textarea
@@ -289,9 +289,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
                           : "Ask YC Mine (Enter to send, Shift+Enter for new line)"
                     }
                     disabled={isLoading}
-                    className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-gray-400 disabled:opacity-50 overflow-hidden"
+                    className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-gray-400 disabled:opacity-50 overflow-hidden text-sm md:text-base"
                     rows={1}
-                    style={{ minHeight: '24px', maxHeight: '120px' }}
+                    style={{ minHeight: '20px', maxHeight: '120px' }}
                   />
                 </div>
                 {/* 字符计数器 - 只在有内容时显示 */}
@@ -305,36 +305,36 @@ const ChatInput: React.FC<ChatInputProps> = ({
               </div>
 
               {/* Bottom row with Resume and LinkedIn buttons */}
-              <div className="flex items-center gap-4 px-4 pb-3 pt-2 border-t border-gray-100">
-                <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 md:gap-4 px-3 md:px-4 pb-2 md:pb-3 pt-1 md:pt-2 border-t border-gray-100">
+                <div className="flex items-center gap-2 md:gap-4">
                 {/* Resume Upload Button */}
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isLoading}
-                    className={`flex items-center gap-2 transition-colors disabled:opacity-50 ${
+                    className={`flex items-center gap-1 md:gap-2 transition-colors disabled:opacity-50 ${
                       uploadedFile
                         ? 'text-gray-800 hover:text-gray-900' 
                         : 'text-gray-600 hover:text-gray-800'
                     }`}
                   title="Upload Resume"
                 >
-                  <Paperclip className="w-4 h-4" />
-                  <span className="text-sm">Resume</span>
+                  <Paperclip className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-xs md:text-sm">Resume</span>
                 </button>
 
                 {/* LinkedIn Button */}
                 <button
                   onClick={() => setShowLinkedinInput(true)}
                   disabled={isLoading}
-                  className={`flex items-center gap-2 transition-colors disabled:opacity-50 ${
+                  className={`flex items-center gap-1 md:gap-2 transition-colors disabled:opacity-50 ${
                       showLinkedinInput || savedLinkedinUrl
                       ? 'text-blue-600 hover:text-blue-700' 
                       : 'text-gray-600 hover:text-gray-800'
                   }`}
                   title="Analyze LinkedIn Profile"
                 >
-                  <Linkedin className="w-4 h-4" />
-                  <span className="text-sm">LinkedIn</span>
+                  <Linkedin className="w-3 h-3 md:w-4 md:h-4" />
+                  <span className="text-xs md:text-sm">LinkedIn</span>
                 </button>
                 </div>
 
@@ -343,19 +343,19 @@ const ChatInput: React.FC<ChatInputProps> = ({
                   {isStreaming ? (
                     <button
                       onClick={onAbortRequest}
-                      className="flex items-center justify-center w-8 h-8 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
+                      className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
                       title="Stop generation"
                     >
-                      <Square className="w-4 h-4" />
+                      <Square className="w-3 h-3 md:w-4 md:h-4" />
                     </button>
                   ) : (
                     <button
                       onClick={handleSubmit}
                       disabled={(!message.trim() && !savedLinkedinUrl && !uploadedFile) || isLoading}
-                      className="flex items-center justify-center w-8 h-8 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white rounded-lg transition-colors"
+                      className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white rounded-lg transition-colors"
                       title="Send message"
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-3 h-3 md:w-4 md:h-4" />
                     </button>
                   )}
                 </div>
